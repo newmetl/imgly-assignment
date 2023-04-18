@@ -13,7 +13,6 @@ interface TreeProps {
 function Tree({ node, isHighlighted=false, onSelect, selectedNode, moveUp, moveDown }: TreeProps) {
 
   const handleOnClick = () => {
-    console.log('Tree node clicked', node.label);
     onSelect(node);
   }
 

@@ -33,7 +33,6 @@ function App() {
       .then((data) => {
         setIsLoadingTree(false);
         const transformedNodes = transformNodes(null, data);
-        console.log(transformedNodes);
         setTreeNodes(transformedNodes);
       });
   }, []);
