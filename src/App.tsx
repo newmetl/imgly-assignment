@@ -5,6 +5,7 @@ import Tree from './components/Tree';
 import TreeNode from './types/TreeNode';
 import Details from './components/Details';
 import NodeDetails from './types/NodeDetails';
+import { click } from '@testing-library/user-event/dist/click';
 
 function App() {
 
@@ -15,13 +16,26 @@ function App() {
   const [nodeDetails, setNodeDetails] = useState<NodeDetails | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  function transformNodes(parent: TreeNode | null, nodeArray: TreeNode[]): TreeNode[] {
+    nodeArray.map((node: TreeNode, index: number) => {
+      node.parent = parent;
+      // add orderIndex
+      node.orderIndex = index;
+      if (node.children)
+        transformNodes(node, node.children);
+    });
+    return nodeArray;
+  }
+
   useEffect(() => {
     setIsLoadingTree(true);
     fetch('https://ubique.img.ly/frontend-tha/data.json')
       .then((response) => response.json())
       .then((data) => {
         setIsLoadingTree(false);
-        setTreeNodes(data);
+        const transformedNodes = transformNodes(null, data);
+        console.log(transformedNodes);
+        setTreeNodes(transformedNodes);
       });
   }, []);
 
@@ -37,7 +51,6 @@ function App() {
         }
       })
       .then((data) => {
-        console.log(data);
         setIsLoadingDetails(false);
         setNodeDetails(data);
       })
@@ -63,20 +76,48 @@ function App() {
     }
   }
 
+  const handleMoveUp = (node: TreeNode) => {
+    const clickedIndex = node.orderIndex;
+    const children = node.parent?.children || treeNodes;
+    const preNode = children.find((node) => node.orderIndex === clickedIndex - 1);
+
+
+    if (preNode) {
+      node.orderIndex = clickedIndex - 1;
+      preNode.orderIndex = clickedIndex;
+    }
+
+    if (node.parent?.children) {
+      node.parent.children = [ ...node.parent?.children ];
+    }
+
+    const newTreeNodes = [ ...treeNodes ];
+    console.log(node, preNode);
+    setTreeNodes(newTreeNodes);
+  }
+
+  const handleMoveDown = (node: TreeNode) => {
+    console.log('handleMoveDown', node.label);
+  }
+
   const loadingTreeElement = isLoadingTree ? <div>Loading Tree Data ...</div> : null;
   const loadDetailsElement = isLoadingDetails ? <div>Loading Details ...</div> : null;
   const nodeDetailsElement = nodeDetails ? <Details data={nodeDetails} /> : null;
   const errorElement = errorMessage ? <div>{ errorMessage }</div> : null;
 
+  const sortedNodes = treeNodes.sort((a, b) => a.orderIndex - b.orderIndex );
+
   return (
     <div className="App">
       <h4>Overview</h4>
       {loadingTreeElement}
-      {treeNodes.map((node: TreeNode) => {
+      {sortedNodes.map((node: TreeNode) => {
         return <Tree
           key={node.label}
           node={node}
           selectedNode={selectedNode}
+          moveUp={handleMoveUp}
+          moveDown={handleMoveDown}
           onSelect={handleNodeSelect} />
       })}
       <hr />
