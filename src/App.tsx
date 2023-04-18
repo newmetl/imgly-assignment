@@ -5,7 +5,6 @@ import Tree from './components/Tree';
 import TreeNode from './types/TreeNode';
 import Details from './components/Details';
 import NodeDetails from './types/NodeDetails';
-import { click } from '@testing-library/user-event/dist/click';
 
 function App() {
 
