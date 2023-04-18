@@ -13,6 +13,7 @@ function App() {
   const [isLoadingTree, setIsLoadingTree] = useState(false);
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [nodeDetails, setNodeDetails] = useState<NodeDetails | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoadingTree(true);
@@ -26,15 +27,29 @@ function App() {
 
   const loadNodeDetails = (node: TreeNode) => {
     setIsLoadingDetails(true);
+    setErrorMessage(null);
     fetch(`https://ubique.img.ly/frontend-tha/entries/${node.id}.json`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 200)
+          return response.json();
+        else if (response.status === 404) {
+          return Promise.reject('Data not found.');
+        }
+      })
       .then((data) => {
+        console.log(data);
         setIsLoadingDetails(false);
         setNodeDetails(data);
+      })
+      .catch((error) => {
+        setIsLoadingDetails(false);
+        setNodeDetails(null);
+        setErrorMessage(error);
       });
   }
 
   const handleNodeSelect = (node: TreeNode) => {
+    setNodeDetails(null);
     if (selectedNode === node) {
       setSeletedNode(null);
       setNodeDetails(null);
@@ -51,6 +66,7 @@ function App() {
   const loadingTreeElement = isLoadingTree ? <div>Loading Tree Data ...</div> : null;
   const loadDetailsElement = isLoadingDetails ? <div>Loading Details ...</div> : null;
   const nodeDetailsElement = nodeDetails ? <Details data={nodeDetails} /> : null;
+  const errorElement = errorMessage ? <div>{ errorMessage }</div> : null;
 
   return (
     <div className="App">
@@ -67,6 +83,7 @@ function App() {
       <div>
         <h4>Node Details</h4>
         {loadDetailsElement}
+        {errorElement}
         {nodeDetailsElement}
       </div>
     </div>
