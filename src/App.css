@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  text-align: left;
 }
 
 .App-logo {
@@ -35,4 +35,12 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Tree {
+  padding-left: 10px;
+}
+
+.Tree .is-highlighted {
+  font-weight: 900;
 }
