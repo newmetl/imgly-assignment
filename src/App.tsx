@@ -75,28 +75,30 @@ function App() {
     }
   }
 
-  const handleMoveUp = (node: TreeNode) => {
+  const moveNode = (node: TreeNode, offset: number) => {
     const clickedIndex = node.orderIndex;
     const children = node.parent?.children || treeNodes;
-    const preNode = children.find((node) => node.orderIndex === clickedIndex - 1);
+    const preNode = children.find((node) => node.orderIndex === clickedIndex + offset);
 
 
     if (preNode) {
-      node.orderIndex = clickedIndex - 1;
+      node.orderIndex = clickedIndex + offset;
       preNode.orderIndex = clickedIndex;
     }
 
     if (node.parent?.children) {
       node.parent.children = [ ...node.parent?.children ];
     }
+  }
 
-    const newTreeNodes = [ ...treeNodes ];
-    console.log(node, preNode);
-    setTreeNodes(newTreeNodes);
+  const handleMoveUp = (node: TreeNode) => {
+    moveNode(node, -1);
+    setTreeNodes([ ...treeNodes ]);
   }
 
   const handleMoveDown = (node: TreeNode) => {
-    console.log('handleMoveDown', node.label);
+    moveNode(node, +1);
+    setTreeNodes([ ...treeNodes ]);
   }
 
   const loadingTreeElement = isLoadingTree ? <div>Loading Tree Data ...</div> : null;
