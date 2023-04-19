@@ -1,7 +1,7 @@
 export default interface TreeNode {
+  id?: string,
   orderIndex: number,
   parent: TreeNode | null,
-  id?: string,
   label: string,
   children?: TreeNode[]
 }
