@@ -1,4 +1,11 @@
-# Getting Started with Create React App
+# About this app
+
+This app is a tree-view application that displays a hierarchical tree structure with nodes and allows users to interact with the nodes by selecting, moving them up or down, and viewing node details. The app also supports toggling between dark and light themes.
+
+This app will make api calls to the following endpoints:
+
+* https://ubique.img.ly/frontend-tha/data.json
+* https://ubique.img.ly/frontend-tha/entries/some-id-abc-123.json
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
