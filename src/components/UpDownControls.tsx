@@ -6,9 +6,9 @@ interface UpDownControlsProps {
 function UpDownControls({ onClickUp, onClickDown }: UpDownControlsProps) {
   return (
     <span className="UpDownControls">
-      <span className="UpDownControlsButton" onClick={onClickUp}>(Up</span>
+      <span data-testid="up-button" className="UpDownControlsButton" onClick={onClickUp}>(Up</span>
       {' | '}
-      <span className="UpDownControlsButton" onClick={onClickDown}>Down)</span>
+      <span data-testid="down-button" className="UpDownControlsButton" onClick={onClickDown}>Down)</span>
     </span>
   );
 

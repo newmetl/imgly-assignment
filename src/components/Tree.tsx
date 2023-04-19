@@ -35,7 +35,7 @@ function Tree({ node, isHighlighted=false, onSelect, selectedNode, moveUp, moveD
   }, [node.children]);
 
   return (
-    <div className={'Tree'}>
+    <div data-testid="tree" className={'Tree'}>
       <TreeLabel onClick={handleOnClick} text={node.label} isHighlighted={isTreeSelected} />
       <UpDownControls onClickUp={handleClickUp} onClickDown={handleClickDown} />
       {sortedChildren?.map((child: TreeNode) => {

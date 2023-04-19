@@ -1,23 +1,22 @@
 import TreeNode from "./types/TreeNode";
 
-// TODO: test this function
 /**
  * Recursively iterate through tree data and add orderIndex and parent to every node.
  * @param parent Parent node of all nodes in nodeArray. Null for top level nodes.
  * @param nodeArray All children nodes of parent.
  * @returns Array of transformed nodes.
  */
-export function transformData(parent: TreeNode | null, nodeArray: TreeNode[]): TreeNode[] {
-  nodeArray.map((node: TreeNode, index: number) => {
-    node.parent = parent;
-    node.orderIndex = index;
-    if (node.children)
-      transformData(node, node.children);
+// TODO: needs proper type checking for recieved data from API. Using workaround with any type.
+export function transformData(parent: any | null, nodeArray: any[]): TreeNode[] {
+  nodeArray.map((entry: TreeNode, index: number) => {
+    entry.parent = parent;
+    entry.orderIndex = index;
+    if (entry.children)
+      transformData(entry, entry.children);
   });
   return nodeArray;
 }
 
-// TODO: wirte test for this function
 /**
  * Update orderIndex for the selected node and it's sibling.
  * @param treeNodes All tree nodes.

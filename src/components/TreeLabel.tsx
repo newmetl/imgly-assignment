@@ -1,4 +1,4 @@
-interface TreeLabelProps {
+export interface TreeLabelProps {
   text: string,
   isHighlighted: boolean,
   onClick(): void
