@@ -7,8 +7,8 @@ import ButtonToggleTheme from './components/ButtonToggleTheme';
 import TreeNode from './types/TreeNode';
 import NodeDetails from './types/TreeNodeDetails';
 
-import { getTreeNodes } from './api/TreeNode';
-import { getTreeNodeDetails } from './api/TreeNodeDetails';
+import { getData } from './api/data';
+import { getEntry } from './api/entry';
 
 const THEME_DARK = 'theme-dark';
 const THEME_LIGHT = 'theme-light';
@@ -36,7 +36,7 @@ function App() {
 
   useEffect(() => {
     setIsLoadingTree(true);
-    getTreeNodes().then((nodes: TreeNode[]) => {
+    getData().then((nodes: TreeNode[]) => {
       setIsLoadingTree(false);
       const transformedNodes = transformNodes(null, nodes);
       setTreeNodes(transformedNodes);
@@ -46,7 +46,7 @@ function App() {
   const loadNodeDetails = (id: string) => {
     setIsLoadingDetails(true);
     setErrorMessage(null);
-    getTreeNodeDetails(id)
+    getEntry(id)
       .then((data) => {
         setNodeDetails(data);
       })
