@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 import TreeNode from "../types/TreeNode";
 import TreeLabel from "./TreeLabel";
+import UpDownControls from "./UpDownControls";
 
 interface TreeProps {
 	node: TreeNode,
@@ -36,10 +37,7 @@ function Tree({ node, isHighlighted=false, onSelect, selectedNode, moveUp, moveD
   return (
     <div className={'Tree'}>
       <TreeLabel onClick={handleOnClick} text={node.label} isHighlighted={isTreeSelected} />
-      {' '}
-      <span onClick={handleClickUp}>(Up</span>
-      {' | '}
-      <span onClick={handleClickDown}>Down)</span>
+      <UpDownControls onClickUp={handleClickUp} onClickDown={handleClickDown} />
       {sortedChildren?.map((child: TreeNode) => {
         return (
           <div key={child.label}>

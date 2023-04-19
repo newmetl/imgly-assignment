@@ -66,3 +66,16 @@ hr {
 .ButtonToggleTheme:hover {
   font-weight: bold;
 }
+
+.UpDownControls {
+  padding-left: 10px;
+  font-size: 0.8em;
+}
+
+.UpDownControlsButton {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.UpDownControlsButton:hover {
+  text-decoration: none;
+}
