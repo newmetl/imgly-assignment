@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import TreeNode from "../types/TreeNode";
 import TreeLabel from "./TreeLabel";
 
@@ -16,23 +17,25 @@ function Tree({ node, isHighlighted=false, onSelect, selectedNode, moveUp, moveD
     onSelect(node);
   }
 
-  const isTreeSelected = () => {
+  const isTreeSelected = useMemo(() => {
     return ( selectedNode && (node === selectedNode)) || isHighlighted;
-  }
+  }, [selectedNode, node, isHighlighted]);
 
-  const handleClickUp = () => {
+  const handleClickUp = useCallback(() => {
     moveUp(node);
-  }
+  }, [node]);
 
-  const handleClickDown = () => {
+  const handleClickDown = useCallback(() => {
     moveDown(node);
-  }
+  }, [node]);
 
-  const sortedChildren = node.children?.sort((a, b) => a.orderIndex - b.orderIndex);
+  const sortedChildren = useMemo(() => {
+    return node.children?.sort((a, b) => a.orderIndex - b.orderIndex);
+  }, [node.children]);
 
   return (
     <div className={'Tree'}>
-      <TreeLabel onClick={handleOnClick} text={node.label} isHighlighted={isTreeSelected()} />
+      <TreeLabel onClick={handleOnClick} text={node.label} isHighlighted={isTreeSelected} />
       {' '}
       <span onClick={handleClickUp}>(Up</span>
       {' | '}
@@ -42,7 +45,7 @@ function Tree({ node, isHighlighted=false, onSelect, selectedNode, moveUp, moveD
           <div key={child.label}>
             <Tree
               node={child}
-              isHighlighted={isTreeSelected()}
+              isHighlighted={isTreeSelected}
               selectedNode={selectedNode}
               onSelect={onSelect}
               moveUp={moveUp}
