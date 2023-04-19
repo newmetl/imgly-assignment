@@ -34,11 +34,15 @@ function App() {
     setIsLoadingTree(true);
     getData().then((nodes: TreeNode[]) => {
       setIsLoadingTree(false);
+
+      // Add orderIndex and parent to data
       const transformedNodes = transformData(null, nodes);
+
       setTreeNodes(transformedNodes);
     });
   }, []);
 
+  // Fetch details for one entry and show them
   const loadNodeDetails = useCallback((id: string) => {
     setIsLoadingDetails(true);
     setErrorMessage(null);
@@ -53,20 +57,21 @@ function App() {
       .finally(() => setIsLoadingDetails(false));
   }, []);
 
+  // (Un-)Highlight clicked subtree
   const handleNodeSelect = useCallback((node: TreeNode) => {
-    // reset details and error message
+    // Reset details and error message
     setNodeDetails(null);
     setErrorMessage(null);
 
-    // click on selected node
+    // Clicked on selected node
     if (selectedNode === node)
       setSeletedNode(null);
 
-    // click on unselected node
+    // Clicked on unselected node
     else {
       setSeletedNode(node);
 
-      // click on leaf
+      // Clicked on leaf
       if (node.id) {
         loadNodeDetails(node.id);
       }
@@ -74,16 +79,19 @@ function App() {
 
   }, [selectedNode]);
 
+  // Move up node/subtree
   const handleMoveUp = (node: TreeNode) => {
     // Create shallow copy to trigger re-render
     setTreeNodes([ ...moveNode(treeNodes, node, UP) ]);
   }
 
+  // Move down node/subtree
   const handleMoveDown = (node: TreeNode) => {
     // Create shallow copy to trigger re-render
     setTreeNodes([ ...moveNode(treeNodes, node, DOWN) ]);
   }
 
+  // Toggle dark and light theme
   const handleToggleTheme = useCallback(() => {
     document.body.classList.remove(THEME_DARK, THEME_LIGHT);
     document.body.classList.add(theme ? THEME_LIGHT : THEME_DARK);
