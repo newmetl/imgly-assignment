@@ -10,8 +10,13 @@ import NodeDetails from './types/TreeNodeDetails';
 import { getData } from './api/data';
 import { getEntry } from './api/entry';
 
+import { transformData, moveNode } from './utils';
+
 const THEME_DARK = 'theme-dark';
 const THEME_LIGHT = 'theme-light';
+
+const UP = -1;
+const DOWN = 1;
 
 function App() {
 
@@ -23,22 +28,12 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [theme, setTheme] = useState<boolean>(false);
 
-  // TODO: move this function to somewhere else
-  function transformNodes(parent: TreeNode | null, nodeArray: TreeNode[]): TreeNode[] {
-    nodeArray.map((node: TreeNode, index: number) => {
-      node.parent = parent;
-      node.orderIndex = index;
-      if (node.children)
-        transformNodes(node, node.children);
-    });
-    return nodeArray;
-  }
-
+  // initialize after first render
   useEffect(() => {
     setIsLoadingTree(true);
     getData().then((nodes: TreeNode[]) => {
       setIsLoadingTree(false);
-      const transformedNodes = transformNodes(null, nodes);
+      const transformedNodes = transformData(null, nodes);
       setTreeNodes(transformedNodes);
     });
   }, []);
@@ -72,31 +67,16 @@ function App() {
     }
   }
 
-  // TODO: sideeffect, not a pure function ... :-/
-  const moveNode = (node: TreeNode, offset: number) => {
-    const clickedIndex = node.orderIndex;
-    const children = node.parent?.children || treeNodes;
-    const preNode = children.find((node) => node.orderIndex === clickedIndex + offset);
-
-
-    if (preNode) {
-      node.orderIndex = clickedIndex + offset;
-      preNode.orderIndex = clickedIndex;
-    }
-
-    if (node.parent?.children) {
-      node.parent.children = [ ...node.parent?.children ];
-    }
-  }
+  }, [selectedNode]);
 
   const handleMoveUp = (node: TreeNode) => {
-    moveNode(node, -1);
-    setTreeNodes([ ...treeNodes ]);
+    // Create shallow copy to trigger re-render
+    setTreeNodes([ ...moveNode(treeNodes, node, UP) ]);
   }
 
   const handleMoveDown = (node: TreeNode) => {
-    moveNode(node, +1);
-    setTreeNodes([ ...treeNodes ]);
+    // Create shallow copy to trigger re-render
+    setTreeNodes([ ...moveNode(treeNodes, node, DOWN) ]);
   }
 
   const handleToggleTheme = () => {
