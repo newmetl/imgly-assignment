@@ -1,5 +1,14 @@
 .App {
+  display: block;
+  width: 500px;
   text-align: left;
+  padding: 30px;
+  margin: 0 auto;
+}
+
+body.theme-dark {
+  color: white;
+  background-color: #0F0F0F;
 }
 
 .App-logo {
@@ -43,4 +52,17 @@
 
 .Tree .is-highlighted {
   font-weight: 900;
+}
+
+hr {
+  margin: 50px 0;
+}
+
+.ButtonToggleTheme {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.ButtonToggleTheme:hover {
+  font-weight: bold;
 }

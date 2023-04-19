@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 import './App.css';
 
 import Tree from './components/Tree';
-import TreeNode from './types/TreeNode';
 import Details from './components/Details';
+import ButtonToggleTheme from './components/ButtonToggleTheme';
+import TreeNode from './types/TreeNode';
 import NodeDetails from './types/NodeDetails';
+
+const THEME_DARK = 'theme-dark';
+const THEME_LIGHT = 'theme-light';
 
 function App() {
 
@@ -14,11 +18,11 @@ function App() {
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [nodeDetails, setNodeDetails] = useState<NodeDetails | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [theme, setTheme] = useState<boolean>(false);
 
   function transformNodes(parent: TreeNode | null, nodeArray: TreeNode[]): TreeNode[] {
     nodeArray.map((node: TreeNode, index: number) => {
       node.parent = parent;
-      // add orderIndex
       node.orderIndex = index;
       if (node.children)
         transformNodes(node, node.children);
@@ -74,6 +78,7 @@ function App() {
     }
   }
 
+  // TODO: sideeffect, not a pure function ... :-/
   const moveNode = (node: TreeNode, offset: number) => {
     const clickedIndex = node.orderIndex;
     const children = node.parent?.children || treeNodes;
@@ -100,6 +105,12 @@ function App() {
     setTreeNodes([ ...treeNodes ]);
   }
 
+  const handleToggleTheme = () => {
+    document.body.classList.remove(THEME_DARK, THEME_LIGHT);
+    document.body.classList.add(theme ? THEME_LIGHT : THEME_DARK);
+    setTheme(!theme);
+  }
+
   const loadingTreeElement = isLoadingTree ? <div>Loading Tree Data ...</div> : null;
   const loadDetailsElement = isLoadingDetails ? <div>Loading Details ...</div> : null;
   const nodeDetailsElement = nodeDetails ? <Details data={nodeDetails} /> : null;
@@ -109,6 +120,7 @@ function App() {
 
   return (
     <div className="App">
+      <ButtonToggleTheme onClick={handleToggleTheme} theme={theme} />
       <h4>Overview</h4>
       {loadingTreeElement}
       {sortedNodes.map((node: TreeNode) => {
