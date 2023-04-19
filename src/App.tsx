@@ -5,7 +5,10 @@ import Tree from './components/Tree';
 import Details from './components/Details';
 import ButtonToggleTheme from './components/ButtonToggleTheme';
 import TreeNode from './types/TreeNode';
-import NodeDetails from './types/NodeDetails';
+import NodeDetails from './types/TreeNodeDetails';
+
+import { getTreeNodes } from './api/TreeNode';
+import { getTreeNodeDetails } from './api/TreeNodeDetails';
 
 const THEME_DARK = 'theme-dark';
 const THEME_LIGHT = 'theme-light';
@@ -20,6 +23,7 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [theme, setTheme] = useState<boolean>(false);
 
+  // TODO: move this function to somewhere else
   function transformNodes(parent: TreeNode | null, nodeArray: TreeNode[]): TreeNode[] {
     nodeArray.map((node: TreeNode, index: number) => {
       node.parent = parent;
@@ -32,35 +36,25 @@ function App() {
 
   useEffect(() => {
     setIsLoadingTree(true);
-    fetch('https://ubique.img.ly/frontend-tha/data.json')
-      .then((response) => response.json())
-      .then((data) => {
-        setIsLoadingTree(false);
-        const transformedNodes = transformNodes(null, data);
-        setTreeNodes(transformedNodes);
-      });
+    getTreeNodes().then((nodes: TreeNode[]) => {
+      setIsLoadingTree(false);
+      const transformedNodes = transformNodes(null, nodes);
+      setTreeNodes(transformedNodes);
+    });
   }, []);
 
-  const loadNodeDetails = (node: TreeNode) => {
+  const loadNodeDetails = (id: string) => {
     setIsLoadingDetails(true);
     setErrorMessage(null);
-    fetch(`https://ubique.img.ly/frontend-tha/entries/${node.id}.json`)
-      .then((response) => {
-        if (response.status === 200)
-          return response.json();
-        else if (response.status === 404) {
-          return Promise.reject('Data not found.');
-        }
-      })
+    getTreeNodeDetails(id)
       .then((data) => {
-        setIsLoadingDetails(false);
         setNodeDetails(data);
       })
       .catch((error) => {
-        setIsLoadingDetails(false);
         setNodeDetails(null);
         setErrorMessage(error);
-      });
+      })
+      .finally(() => setIsLoadingDetails(false));
   }
 
   const handleNodeSelect = (node: TreeNode) => {
@@ -71,7 +65,7 @@ function App() {
     } else {
       setSeletedNode(node);
       if (node.id) {
-        loadNodeDetails(node);
+        loadNodeDetails(node.id);
       } else {
         setNodeDetails(null);
       }

@@ -1,4 +1,4 @@
-import NodeDetails from "../types/NodeDetails";
+import NodeDetails from "../types/TreeNodeDetails";
 
 interface DetailsProps {
   data: NodeDetails

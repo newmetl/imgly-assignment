@@ -1,4 +1,4 @@
-export default interface NodeDetails {
+export default interface TreeNodeDetails {
   createdAt: string,
   createdBy: string,
   description: string,

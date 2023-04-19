@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface ButtonToggleThemeProps {
   theme: boolean,
   onClick(): void
