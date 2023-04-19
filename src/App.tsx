@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
 
 import Tree from './components/Tree';
 import Details from './components/Details';
 import ButtonToggleTheme from './components/ButtonToggleTheme';
+
 import TreeNode from './types/TreeNode';
 import NodeDetails from './types/TreeNodeDetails';
 
@@ -38,7 +39,7 @@ function App() {
     });
   }, []);
 
-  const loadNodeDetails = (id: string) => {
+  const loadNodeDetails = useCallback((id: string) => {
     setIsLoadingDetails(true);
     setErrorMessage(null);
     getEntry(id)
@@ -50,22 +51,26 @@ function App() {
         setErrorMessage(error);
       })
       .finally(() => setIsLoadingDetails(false));
-  }
+  }, []);
 
-  const handleNodeSelect = (node: TreeNode) => {
+  const handleNodeSelect = useCallback((node: TreeNode) => {
+    // reset details and error message
     setNodeDetails(null);
-    if (selectedNode === node) {
+    setErrorMessage(null);
+
+    // click on selected node
+    if (selectedNode === node)
       setSeletedNode(null);
-      setNodeDetails(null);
-    } else {
+
+    // click on unselected node
+    else {
       setSeletedNode(node);
+
+      // click on leaf
       if (node.id) {
         loadNodeDetails(node.id);
-      } else {
-        setNodeDetails(null);
       }
     }
-  }
 
   }, [selectedNode]);
 
@@ -79,18 +84,31 @@ function App() {
     setTreeNodes([ ...moveNode(treeNodes, node, DOWN) ]);
   }
 
-  const handleToggleTheme = () => {
+  const handleToggleTheme = useCallback(() => {
     document.body.classList.remove(THEME_DARK, THEME_LIGHT);
     document.body.classList.add(theme ? THEME_LIGHT : THEME_DARK);
     setTheme(!theme);
-  }
+  }, [theme]);
 
-  const loadingTreeElement = isLoadingTree ? <div>Loading Tree Data ...</div> : null;
-  const loadDetailsElement = isLoadingDetails ? <div>Loading Details ...</div> : null;
-  const nodeDetailsElement = nodeDetails ? <Details data={nodeDetails} /> : null;
-  const errorElement = errorMessage ? <div>{ errorMessage }</div> : null;
+  const loadingTreeElement = useMemo(() => {
+    return isLoadingTree ? <div>Loading Tree Data ...</div> : null;
+  }, [isLoadingTree]);
 
-  const sortedNodes = treeNodes.sort((a, b) => a.orderIndex - b.orderIndex );
+  const loadingDetailsElement = useMemo(() => {
+    return isLoadingDetails ? <div>Loading Details ...</div> : null;
+  }, [isLoadingDetails]);
+
+  const nodeDetailsElement = useMemo(() => {
+    return nodeDetails ? <Details data={nodeDetails} /> : null;
+  }, [nodeDetails]);
+
+  const errorElement = useMemo(() => {
+    return errorMessage ? <div>{ errorMessage }</div> : null;
+  }, [errorMessage]);
+
+  const sortedNodes = useMemo(() => {
+    return treeNodes.sort((a, b) => a.orderIndex - b.orderIndex );
+  }, [treeNodes]);
 
   return (
     <div className="App">
@@ -109,7 +127,7 @@ function App() {
       <hr />
       <div>
         <h4>Node Details</h4>
-        {loadDetailsElement}
+        {loadingDetailsElement}
         {errorElement}
         {nodeDetailsElement}
       </div>
