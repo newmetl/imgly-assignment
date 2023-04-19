@@ -54,6 +54,10 @@ body.theme-dark {
   font-weight: 900;
 }
 
+.TreeLabel {
+  cursor: pointer;
+}
+
 hr {
   margin: 50px 0;
 }

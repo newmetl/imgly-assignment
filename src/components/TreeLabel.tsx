@@ -9,7 +9,7 @@ interface TreeLabelProps {
 function TreeLabel({ text, isHighlighted, onClick }: TreeLabelProps) {
 
   const hightlightClassName = function() {
-    return isHighlighted ? 'is-highlighted' : '';
+    return isHighlighted ? 'TreeLabel is-highlighted' : 'TreeLabel';
   }
 
   return <span className={hightlightClassName()} onClick={onClick}>{text}</span>;
