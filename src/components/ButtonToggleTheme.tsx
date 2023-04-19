@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 interface ButtonToggleThemeProps {
   theme: boolean,
   onClick(): void
@@ -5,12 +7,11 @@ interface ButtonToggleThemeProps {
 
 function ButtonToggleTheme({ theme, onClick }: ButtonToggleThemeProps) {
 
-  const getButtonLabel = (): string => {
+  const getButtonLabel = useCallback((): string => {
     return theme ? 'Light' : 'Dark';
-  }
+  }, [theme]);
 
   return <span className="ButtonToggleTheme" onClick={onClick}>{getButtonLabel()}</span>;
-
 }
 
 export default ButtonToggleTheme;
