@@ -2,7 +2,7 @@ import * as constants from './constants';
 import TreeNode from '../types/TreeNode';
 
 export function getDataUrl() {
-  return `${constants.BASE_API_URL}/${constants.DATA_PATH}`;
+  return `${constants.BASE_API_URL}/${constants.DATA_PATH}.json`;
 }
 
 // GET /data.json
