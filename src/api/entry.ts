@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import TreeNodeDetails from '../types/TreeNodeDetails';
 
-function getEntryUrl(id: string): string {
+export function getEntryUrl(id: string): string {
   return `${constants.BASE_API_URL}/${constants.ENTRY_PATH}/${id}.json`;
 }
 
