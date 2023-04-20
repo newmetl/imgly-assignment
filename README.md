@@ -1,6 +1,6 @@
 # About this app
 
-This app is a tree-view application that displays a hierarchical tree structure with nodes and allows users to interact with the nodes by selecting, moving them up or down, and viewing node details. The app also supports toggling between dark and light themes.
+This app is a tree-view application that displays a hierarchical tree structure with nodes and allows users to interact with the nodes by selecting, moving them up or down, and viewing node details. The app also supports switching between themes.
 
 This app will make api calls to the following endpoints:
 
