@@ -4,17 +4,18 @@ import './App.css';
 import Tree from './components/Tree';
 import Details from './components/Details';
 import ButtonToggleTheme from './components/ButtonToggleTheme';
+import { ThemeProvider } from './components/ThemeProvider';
 
 import TreeNode from './types/TreeNode';
 import NodeDetails from './types/TreeNodeDetails';
+import Theme from './types/Theme';
 
 import { getData } from './api/data';
 import { getEntry } from './api/entry';
 
 import { transformData, moveNode } from './utils';
 
-const THEME_DARK = 'theme-dark';
-const THEME_LIGHT = 'theme-light';
+import { defaultTheme } from './themes';
 
 const UP = -1;
 const DOWN = 1;
@@ -27,10 +28,11 @@ function App() {
   const [isLoadingDetails, setIsLoadingDetails] = useState(false);
   const [nodeDetails, setNodeDetails] = useState<NodeDetails | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [theme, setTheme] = useState<boolean>(false);
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
 
   // initialize after first render
   useEffect(() => {
+    setBodyStyles(theme);
     setIsLoadingTree(true);
     getData().then((nodes: TreeNode[]) => {
       setIsLoadingTree(false);
@@ -91,11 +93,15 @@ function App() {
     setTreeNodes([ ...moveNode(treeNodes, node, DOWN) ]);
   }
 
-  // Toggle dark and light theme
-  const handleToggleTheme = useCallback(() => {
-    document.body.classList.remove(THEME_DARK, THEME_LIGHT);
-    document.body.classList.add(theme ? THEME_LIGHT : THEME_DARK);
-    setTheme(!theme);
+  // Set theme styles on body
+  const setBodyStyles = useCallback((selectedTheme: Theme) => {
+    document.body.style.backgroundColor = selectedTheme.backgroundColor;
+    document.body.style.color = selectedTheme.textColor;
+  }, []);
+
+  const handleToggleTheme = useCallback((selectedTheme: Theme) => {
+    setTheme(selectedTheme);
+    setBodyStyles(selectedTheme);
   }, [theme]);
 
   const loadingTreeElement = useMemo(() => {
@@ -119,27 +125,29 @@ function App() {
   }, [treeNodes]);
 
   return (
-    <div className="App">
-      <ButtonToggleTheme onClick={handleToggleTheme} theme={theme} />
-      <h4>Overview</h4>
-      {loadingTreeElement}
-      {sortedNodes.map((node: TreeNode) => {
-        return <Tree
-          key={node.label}
-          node={node}
-          selectedNode={selectedNode}
-          moveUp={handleMoveUp}
-          moveDown={handleMoveDown}
-          onSelect={handleNodeSelect} />
-      })}
-      <hr />
-      <div>
-        <h4>Node Details</h4>
-        {loadingDetailsElement}
-        {errorElement}
-        {nodeDetailsElement}
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <ButtonToggleTheme onClick={handleToggleTheme} />
+        <h4>Overview</h4>
+        {loadingTreeElement}
+        {sortedNodes.map((node: TreeNode) => {
+          return <Tree
+            key={node.label}
+            node={node}
+            selectedNode={selectedNode}
+            moveUp={handleMoveUp}
+            moveDown={handleMoveDown}
+            onSelect={handleNodeSelect} />
+        })}
+        <hr />
+        <div>
+          <h4>Node Details</h4>
+          {loadingDetailsElement}
+          {errorElement}
+          {nodeDetailsElement}
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 

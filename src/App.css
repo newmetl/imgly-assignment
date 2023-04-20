@@ -6,11 +6,6 @@
   margin: 0 auto;
 }
 
-body.theme-dark {
-  color: white;
-  background-color: #0F0F0F;
-}
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -62,15 +57,6 @@ hr {
   margin: 50px 0;
 }
 
-.ButtonToggleTheme {
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.ButtonToggleTheme:hover {
-  font-weight: bold;
-}
-
 .UpDownControls {
   padding-left: 10px;
   font-size: 0.8em;
@@ -82,4 +68,8 @@ hr {
 }
 .UpDownControlsButton:hover {
   text-decoration: none;
+}
+
+.ButtonToggleTheme button {
+  margin-right: 5px;
 }

@@ -1,17 +1,27 @@
 import { useCallback } from "react";
+import Theme from "../types/Theme";
+import { themes } from "../themes";
 
 interface ButtonToggleThemeProps {
-  theme: boolean,
-  onClick(): void
+  onClick(theme: Theme): void
 }
 
-function ButtonToggleTheme({ theme, onClick }: ButtonToggleThemeProps) {
+function ButtonToggleTheme({ onClick }: ButtonToggleThemeProps) {
 
-  const getButtonLabel = useCallback((): string => {
-    return theme ? 'Light' : 'Dark';
-  }, [theme]);
+  const handleClick = useCallback((theme: Theme) => {
+    onClick(theme);
+  }, [onClick]);
 
-  return <span className="ButtonToggleTheme" onClick={onClick}>{getButtonLabel()}</span>;
+  return (
+    <div className="ButtonToggleTheme">
+      {Object.keys(themes).map((key) => {
+        const theme = themes[key];
+        return <button key={key} onClick={() => handleClick(theme)}>{key}</button>
+      })}
+    </div>
+  )
+
+
 }
 
 export default ButtonToggleTheme;

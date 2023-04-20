@@ -3,6 +3,8 @@ import TreeNode from "../types/TreeNode";
 import TreeLabel from "./TreeLabel";
 import UpDownControls from "./UpDownControls";
 
+import { useTheme } from "./ThemeProvider";
+
 interface TreeProps {
 	node: TreeNode,
   isHighlighted?: boolean,
@@ -13,6 +15,8 @@ interface TreeProps {
 }
 
 function Tree({ node, isHighlighted=false, onSelect, selectedNode, moveUp, moveDown }: TreeProps) {
+
+  const theme = useTheme();
 
   const handleOnClick = () => {
     onSelect(node);
@@ -35,7 +39,10 @@ function Tree({ node, isHighlighted=false, onSelect, selectedNode, moveUp, moveD
   }, [node.children]);
 
   return (
-    <div data-testid="tree" className={'Tree'}>
+    <div
+      data-testid="tree"
+      style={{ color: theme.textColor, backgroundColor: theme.backgroundColor }}
+      className={'Tree'}>
       <TreeLabel onClick={handleOnClick} text={node.label} isHighlighted={isTreeSelected} />
       <UpDownControls onClickUp={handleClickUp} onClickDown={handleClickDown} />
       {sortedChildren?.map((child: TreeNode) => {
