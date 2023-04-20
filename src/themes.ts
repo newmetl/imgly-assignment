@@ -6,7 +6,7 @@ export const defaultTheme: Theme = {
 };
 
 export const darkTheme: Theme = {
-  backgroundColor: '#333',
+  backgroundColor: '#222',
   textColor: 'white',
 };
 
@@ -16,7 +16,7 @@ export const blueTheme: Theme = {
 };
 
 export const themes: { [key: string]: Theme } = {
-  light: defaultTheme,
-  dark: darkTheme,
-  blue: blueTheme
+  Light: defaultTheme,
+  Dark: darkTheme,
+  Blue: blueTheme
 };
