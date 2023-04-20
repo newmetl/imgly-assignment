@@ -10,7 +10,13 @@ export const darkTheme: Theme = {
   textColor: 'white',
 };
 
+export const blueTheme: Theme = {
+  backgroundColor: '#333399',
+  textColor: 'white',
+};
+
 export const themes: { [key: string]: Theme } = {
   light: defaultTheme,
-  dark: darkTheme
+  dark: darkTheme,
+  blue: blueTheme
 };
